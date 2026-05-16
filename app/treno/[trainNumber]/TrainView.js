@@ -67,7 +67,7 @@ export default function TrainView({ trainNumber }) {
     const last = parseInt(localStorage.getItem(key) || '0', 10);
     if (Date.now() - last < COOLDOWN_MS) {
       const mins = Math.ceil((COOLDOWN_MS - (Date.now() - last)) / 60000);
-      setMessage(`Hai già segnalato. Riprova tra ${mins} min.`);
+      setMessage(`You already reported. Try again in ${mins} min.`);
       setSubmitting(false);
       return;
     }
@@ -75,10 +75,10 @@ export default function TrainView({ trainNumber }) {
       .from('reports')
       .insert({ train_number: trainNumber, device_id: deviceId });
     if (error) {
-      setMessage('Errore. Riprova.');
+      setMessage('Error. Try again.');
     } else {
       localStorage.setItem(key, String(Date.now()));
-      setMessage('Segnalazione inviata. Grazie!');
+      setMessage('Report sent. Thank you!');
       loadCount();
     }
     setSubmitting(false);
@@ -89,7 +89,7 @@ export default function TrainView({ trainNumber }) {
   return (
     <main>
       <Link href="/" style={{ color: '#888', textDecoration: 'none' }}>← Home</Link>
-      <h1 style={{ fontSize: 32, margin: '12px 0 4px' }}>Treno {trainNumber}</h1>
+      <h1 style={{ fontSize: 32, margin: '12px 0 4px' }}>Train {trainNumber}</h1>
       {info && (
         <p style={{ color: '#aaa', margin: '0 0 4px', fontSize: 14 }}>
           {info.origin} → {info.destination}
@@ -101,21 +101,21 @@ export default function TrainView({ trainNumber }) {
       )}
       {info && info.delay !== 0 && (
         <p style={{ color: info.delay > 0 ? '#fb923c' : '#4ade80', margin: '4px 0', fontSize: 13 }}>
-          {info.delay > 0 ? `In ritardo di ${info.delay}′` : `In anticipo di ${-info.delay}′`}
-          {info.lastLocation && <span style={{ color: '#888' }}> · Ultimo rilevamento: {info.lastLocation}</span>}
+          {info.delay > 0 ? `Delayed by ${info.delay}′` : `${-info.delay}′ early`}
+          {info.lastLocation && <span style={{ color: '#888' }}> · Last seen: {info.lastLocation}</span>}
         </p>
       )}
-      <p style={{ color: '#aaa', margin: '12px 0 20px', fontSize: 14 }}>Segnala se vedi un controllore a bordo.</p>
+      <p style={{ color: '#aaa', margin: '12px 0 20px', fontSize: 14 }}>Report if you see an inspector on board.</p>
 
       <div style={{
         padding: 20, background: '#1a1a1a', borderRadius: 12, marginBottom: 20, textAlign: 'center',
       }}>
-        <div style={{ fontSize: 13, color: '#888' }}>Livello allerta (ultima ora)</div>
+        <div style={{ fontSize: 13, color: '#888' }}>Alert level (last hour)</div>
         <div style={{ fontSize: 28, fontWeight: 700, color: lvl.color, marginTop: 4 }}>
           {lvl.emoji} {lvl.label}
         </div>
         <div style={{ color: '#888', fontSize: 13, marginTop: 4 }}>
-          {count} segnalazion{count === 1 ? 'e' : 'i'}
+          {count} report{count === 1 ? '' : 's'}
         </div>
       </div>
 
@@ -128,7 +128,7 @@ export default function TrainView({ trainNumber }) {
           cursor: 'pointer', opacity: submitting ? 0.6 : 1,
         }}
       >
-        🚨 Controllore a bordo
+        🚨 Inspector on board
       </button>
 
       {message && (
@@ -137,11 +137,11 @@ export default function TrainView({ trainNumber }) {
         </p>
       )}
 
-      <h2 style={{ fontSize: 18, marginTop: 32, marginBottom: 12 }}>Fermate del treno</h2>
-      {stopsLoading && <div style={{ color: '#888', padding: 12 }}>Caricamento fermate…</div>}
+      <h2 style={{ fontSize: 18, marginTop: 32, marginBottom: 12 }}>Stops</h2>
+      {stopsLoading && <div style={{ color: '#888', padding: 12 }}>Loading stops…</div>}
       {!stopsLoading && stops.length === 0 && (
         <div style={{ color: '#888', padding: 12, fontSize: 13 }}>
-          Fermate non disponibili per questo treno.
+          Stops not available for this train.
         </div>
       )}
       <ol style={{ listStyle: 'none', padding: 0, margin: 0 }}>
@@ -156,7 +156,7 @@ export default function TrainView({ trainNumber }) {
             }}>
               <div>
                 <div style={{ fontWeight: 600, fontSize: 14 }}>{s.name}</div>
-                {s.platform && <div style={{ color: '#666', fontSize: 11 }}>Bin. {s.platform}</div>}
+                {s.platform && <div style={{ color: '#666', fontSize: 11 }}>Plat. {s.platform}</div>}
               </div>
               <div style={{ fontSize: 14, color: delayed ? '#fb923c' : '#aaa', fontWeight: 500 }}>
                 {time}

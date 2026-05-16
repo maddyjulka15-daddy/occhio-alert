@@ -58,29 +58,29 @@ export default function StationView({ slug, station }) {
 
   return (
     <main>
-      <Link href="/" style={{ color: '#888', textDecoration: 'none' }}>← Stazioni</Link>
+      <Link href="/" style={{ color: '#888', textDecoration: 'none' }}>← Stations</Link>
       <h1 style={{ fontSize: 28, margin: '12px 0 4px' }}>{station.name}</h1>
       <p style={{ color: '#aaa', fontSize: 13, margin: '0 0 4px' }}>
-        Partenze in tempo reale
-        {updatedAt && <> · agg. {updatedAt.toLocaleTimeString('it-IT').slice(0,5)}</>}
+        Real-time departures
+        {updatedAt && <> · updated {updatedAt.toLocaleTimeString('en-GB').slice(0,5)}</>}
       </p>
       <p style={{ color: '#555', fontSize: 11, margin: '0 0 16px' }}>
-        Dati in tempo reale da ViaggiaTreno
+        Live data from ViaggiaTreno
       </p>
 
-      {loading && <div style={{ color: '#888', padding: 24, textAlign: 'center' }}>Caricamento…</div>}
+      {loading && <div style={{ color: '#888', padding: 24, textAlign: 'center' }}>Loading…</div>}
 
       {!loading && trains.length === 0 && (
         <div style={{
           background: '#1a1a1a', padding: 24, borderRadius: 12, textAlign: 'center', color: '#888'
         }}>
-          Nessun treno in arrivo. Torna più tardi.
+          No upcoming trains. Try again later.
         </div>
       )}
 
       {error && (
         <div style={{ background: '#3a1a1a', color: '#fca5a5', padding: 12, borderRadius: 8, fontSize: 12 }}>
-          Errore: {error}
+          Error: {error}
         </div>
       )}
 
@@ -115,7 +115,7 @@ export default function StationView({ slug, station }) {
               </div>
               <div style={{ color: '#aaa', fontSize: 13, marginTop: 4 }}>
                 → {t.destination}
-                {t.platform && <span style={{ marginLeft: 8, color: '#666' }}>Bin. {t.platform}</span>}
+                {t.platform && <span style={{ marginLeft: 8, color: '#666' }}>Plat. {t.platform}</span>}
               </div>
               {count > 0 ? (
                 <div style={{
@@ -131,7 +131,7 @@ export default function StationView({ slug, station }) {
                   background: '#2a2a2a', color: '#888', borderRadius: 4,
                   fontSize: 12, fontWeight: 600,
                 }}>
-                  ⚪ Nessun dato
+                  ⚪ No data
                 </div>
               )}
             </Link>

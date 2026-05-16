@@ -25,14 +25,14 @@ export default function Home() {
     <main>
       <h1 style={{ fontSize: 30, margin: '0 0 4px' }}>Ticket Check Pavia</h1>
       <p style={{ color: '#aaa', margin: '0 0 20px', fontSize: 14 }}>
-        Cerca treni Milano ↔ Pavia. Segnalazioni controllori in tempo reale.
+        Search trains Milano ↔ Pavia. Real-time inspector alerts.
       </p>
 
       <form onSubmit={search} style={{
         background: '#1a1a1a', padding: 16, borderRadius: 12, marginBottom: 24,
         border: '1px solid #2a2a2a',
       }}>
-        <label style={{ display: 'block', fontSize: 12, color: '#888', marginBottom: 4 }}>DA</label>
+        <label style={{ display: 'block', fontSize: 12, color: '#888', marginBottom: 4 }}>FROM</label>
         <select
           value={from}
           onChange={(e) => setFrom(e.target.value)}
@@ -52,9 +52,9 @@ export default function Home() {
             background: '#2a2a2a', color: '#aaa', border: 'none', borderRadius: 6,
             cursor: 'pointer', fontSize: 13,
           }}
-        >↑↓ Inverti</button>
+        >↑↓ Swap</button>
 
-        <label style={{ display: 'block', fontSize: 12, color: '#888', marginBottom: 4 }}>A</label>
+        <label style={{ display: 'block', fontSize: 12, color: '#888', marginBottom: 4 }}>TO</label>
         <select
           value={to}
           onChange={(e) => setTo(e.target.value)}
@@ -73,12 +73,12 @@ export default function Home() {
             background: '#3b82f6', color: '#fff', border: 'none', borderRadius: 8,
             cursor: 'pointer',
           }}
-        >🔍 Cerca treni</button>
+        >🔍 Search trains</button>
       </form>
 
       <details style={{ background: '#1a1a1a', padding: 12, borderRadius: 10, border: '1px solid #2a2a2a' }}>
         <summary style={{ cursor: 'pointer', color: '#aaa', fontSize: 13 }}>
-          Oppure scegli una stazione di partenza →
+          Or pick a departure station →
         </summary>
         <div style={{ display: 'grid', gap: 8, marginTop: 12 }}>
           {STATION_LIST.map(s => (

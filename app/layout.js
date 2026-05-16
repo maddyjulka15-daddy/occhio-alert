@@ -1,11 +1,11 @@
 export const metadata = {
   title: 'Ticket Check Pavia',
-  description: 'Segnalazioni community sui controllori della linea Milano–Pavia.',
+  description: 'Community ticket inspector reports for the Milano–Pavia line.',
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="it">
+    <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <meta name="google" content="notranslate" />
@@ -32,10 +32,10 @@ export default function RootLayout({ children }) {
           boxShadow: '0 -4px 12px rgba(0,0,0,0.5)',
         }}>
           <div style={{ marginBottom: 4 }}>
-            ⚠️ <strong>Acquista sempre un biglietto valido.</strong>
+            ⚠️ <strong>Always buy a valid ticket.</strong>
           </div>
           <div style={{ fontSize: 12, color: '#aaa' }}>
-            Segnalazioni della community · Non affiliati a Trenord ·{' '}
+            Community reports · Not affiliated with Trenord ·{' '}
             <a href="/privacy" style={{ color: '#7dd3fc', textDecoration: 'underline' }}>Privacy</a>
           </div>
         </footer>
