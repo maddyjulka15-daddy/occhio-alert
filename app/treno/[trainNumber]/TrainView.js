@@ -21,6 +21,9 @@ export default function TrainView({ trainNumber }) {
   const [count, setCount] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState(null);
+  const [stops, setStops] = useState([]);
+  const [info, setInfo] = useState(null);
+  const [stopsLoading, setStopsLoading] = useState(true);
 
   const loadCount = useCallback(async () => {
     const since = new Date(Date.now() - 60 * 60 * 1000).toISOString();
@@ -32,14 +35,29 @@ export default function TrainView({ trainNumber }) {
     setCount(c || 0);
   }, [trainNumber]);
 
+  const loadStops = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/train-stops?trainNumber=${trainNumber}`, { cache: 'no-store' });
+      const data = await res.json();
+      setStops(data.stops || []);
+      setInfo(data.info || null);
+    } catch {
+      setStops([]);
+    } finally {
+      setStopsLoading(false);
+    }
+  }, [trainNumber]);
+
   useEffect(() => {
     loadCount();
+    loadStops();
     const channel = supabase
       .channel(`train-${trainNumber}`)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'reports', filter: `train_number=eq.${trainNumber}` }, () => loadCount())
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
-  }, [trainNumber, loadCount]);
+    const t = setInterval(loadStops, 120000);
+    return () => { supabase.removeChannel(channel); clearInterval(t); };
+  }, [trainNumber, loadCount, loadStops]);
 
   async function submit() {
     setSubmitting(true);
@@ -72,7 +90,22 @@ export default function TrainView({ trainNumber }) {
     <main>
       <Link href="/" style={{ color: '#888', textDecoration: 'none' }}>← Home</Link>
       <h1 style={{ fontSize: 32, margin: '12px 0 4px' }}>Treno {trainNumber}</h1>
-      <p style={{ color: '#aaa', margin: '0 0 24px' }}>Segnala se vedi un controllore a bordo.</p>
+      {info && (
+        <p style={{ color: '#aaa', margin: '0 0 4px', fontSize: 14 }}>
+          {info.origin} → {info.destination}
+          {info.category && <span style={{
+            marginLeft: 8, padding: '2px 6px', background: '#2a2a2a',
+            borderRadius: 4, fontSize: 11, color: '#aaa',
+          }}>{info.category}</span>}
+        </p>
+      )}
+      {info && info.delay !== 0 && (
+        <p style={{ color: info.delay > 0 ? '#fb923c' : '#4ade80', margin: '4px 0', fontSize: 13 }}>
+          {info.delay > 0 ? `In ritardo di ${info.delay}′` : `In anticipo di ${-info.delay}′`}
+          {info.lastLocation && <span style={{ color: '#888' }}> · Ultimo rilevamento: {info.lastLocation}</span>}
+        </p>
+      )}
+      <p style={{ color: '#aaa', margin: '12px 0 20px', fontSize: 14 }}>Segnala se vedi un controllore a bordo.</p>
 
       <div style={{
         padding: 20, background: '#1a1a1a', borderRadius: 12, marginBottom: 20, textAlign: 'center',
@@ -103,6 +136,36 @@ export default function TrainView({ trainNumber }) {
           {message}
         </p>
       )}
+
+      <h2 style={{ fontSize: 18, marginTop: 32, marginBottom: 12 }}>Fermate del treno</h2>
+      {stopsLoading && <div style={{ color: '#888', padding: 12 }}>Caricamento fermate…</div>}
+      {!stopsLoading && stops.length === 0 && (
+        <div style={{ color: '#888', padding: 12, fontSize: 13 }}>
+          Fermate non disponibili per questo treno.
+        </div>
+      )}
+      <ol style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+        {stops.map((s, i) => {
+          const time = s.actualDeparture || s.scheduledDeparture || s.actualArrival || s.scheduledArrival || '';
+          const delayed = s.actualDeparture && s.scheduledDeparture && s.actualDeparture !== s.scheduledDeparture;
+          return (
+            <li key={i} style={{
+              padding: '12px 14px', background: '#1a1a1a', borderRadius: 8,
+              marginBottom: 6, border: '1px solid #2a2a2a',
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            }}>
+              <div>
+                <div style={{ fontWeight: 600, fontSize: 14 }}>{s.name}</div>
+                {s.platform && <div style={{ color: '#666', fontSize: 11 }}>Bin. {s.platform}</div>}
+              </div>
+              <div style={{ fontSize: 14, color: delayed ? '#fb923c' : '#aaa', fontWeight: 500 }}>
+                {time}
+                {delayed && s.scheduledDeparture && <span style={{ color: '#666', textDecoration: 'line-through', marginLeft: 6, fontSize: 11 }}>{s.scheduledDeparture}</span>}
+              </div>
+            </li>
+          );
+        })}
+      </ol>
     </main>
   );
 }
