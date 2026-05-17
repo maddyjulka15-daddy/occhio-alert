@@ -14,9 +14,30 @@ export default function StationView({ slug, station }) {
 
   const loadTrains = useCallback(async () => {
     try {
-      const res = await fetch(`/api/departures/${station.code}`, { cache: 'no-store' });
-      const data = await res.json();
-      setTrains(data.trains || []);
+      if (station.multi) {
+        const results = await Promise.all(
+          station.multi.map(async ({ code, label }) => {
+            const res = await fetch(`/api/departures/${code}`, { cache: 'no-store' });
+            const data = await res.json();
+            return (data.trains || []).map(t => ({ ...t, from_label: label }));
+          })
+        );
+        const merged = results.flat();
+        const seen = new Set();
+        const unique = [];
+        for (const t of merged) {
+          const key = `${t.train_number}-${t.departure_ts}-${t.from_label}`;
+          if (seen.has(key)) continue;
+          seen.add(key);
+          unique.push(t);
+        }
+        unique.sort((a, b) => (a.departure_ts || 0) - (b.departure_ts || 0));
+        setTrains(unique);
+      } else {
+        const res = await fetch(`/api/departures/${station.code}`, { cache: 'no-store' });
+        const data = await res.json();
+        setTrains(data.trains || []);
+      }
       setUpdatedAt(new Date());
       setError(null);
     } catch (e) {
@@ -24,7 +45,7 @@ export default function StationView({ slug, station }) {
     } finally {
       setLoading(false);
     }
-  }, [station.code]);
+  }, [station]);
 
   const loadReports = useCallback(async () => {
     const since = new Date(Date.now() - 60 * 60 * 1000).toISOString();
@@ -131,6 +152,10 @@ export default function StationView({ slug, station }) {
               <div style={{ color: isCancelled ? '#666' : '#aaa', fontSize: 13, marginTop: 4 }}>
                 → {t.destination}
                 {t.platform && !isCancelled && <span style={{ marginLeft: 8, color: '#666' }}>Plat. {t.platform}</span>}
+                {t.from_label && <span style={{
+                  marginLeft: 8, padding: '1px 6px', background: '#1a2942',
+                  borderRadius: 4, fontSize: 11, color: '#7dd3fc',
+                }}>from {t.from_label}</span>}
               </div>
               {!isCancelled && (count > 0 ? (
                 <div style={{
