@@ -30,21 +30,25 @@ export default function Home() {
   const [from, setFrom] = useState('milano-centrale');
   const [to, setTo] = useState('pavia');
   const [error, setError] = useState('');
+  const [restored, setRestored] = useState(false);
 
   useEffect(() => {
     const savedFrom = localStorage.getItem('last_from');
     const savedTo = localStorage.getItem('last_to');
     if (savedFrom) setFrom(savedFrom);
     if (savedTo) setTo(savedTo);
+    setRestored(true);
   }, []);
 
   useEffect(() => {
+    if (!restored) return;
     localStorage.setItem('last_from', from);
-  }, [from]);
+  }, [from, restored]);
 
   useEffect(() => {
+    if (!restored) return;
     localStorage.setItem('last_to', to);
-  }, [to]);
+  }, [to, restored]);
 
   function search(e) {
     e.preventDefault();
@@ -58,6 +62,8 @@ export default function Home() {
       setError("Milan (all stations) can't be combined with a specific Milan station.");
       return;
     }
+    localStorage.setItem('last_from', from);
+    localStorage.setItem('last_to', to);
     router.push(`/cerca?from=${from}&to=${to}`);
   }
 
