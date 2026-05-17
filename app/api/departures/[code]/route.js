@@ -58,7 +58,7 @@ export async function GET(_req, { params }) {
       const key = `${t.numeroTreno}-${t.orarioPartenza}`;
       if (seen.has(key)) continue;
       seen.add(key);
-      const cancelled = !!t.nonPartito;
+      const cancelled = t.provvedimento === 1;
       if (cancelled) cancelledNumbers.push(String(t.numeroTreno));
       merged.push({
         train_number: String(t.numeroTreno),
@@ -73,15 +73,18 @@ export async function GET(_req, { params }) {
     }
   }
 
-  // Fire and forget — clear reports for cancelled trains
+  // Fire and forget — clear reports for genuinely cancelled trains
   if (cancelledNumbers.length > 0) {
     clearReportsForCancelled([...new Set(cancelledNumbers)]).catch(() => {});
   }
 
-  merged.sort((a, b) => (a.departure_ts || 0) - (b.departure_ts || 0));
+  // Only show trains that haven't departed yet (allow 5 min grace for in-station trains)
+  const cutoff = now.getTime() - 5 * 60 * 1000;
+  const upcoming = merged.filter(t => t.departure_ts && t.departure_ts >= cutoff);
+  upcoming.sort((a, b) => (a.departure_ts || 0) - (b.departure_ts || 0));
 
   return Response.json({
-    trains: merged,
+    trains: upcoming,
     cancelled_count: cancelledNumbers.length,
     fetched_at: now.toISOString(),
   });
