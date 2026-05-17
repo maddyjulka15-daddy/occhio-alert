@@ -108,7 +108,7 @@ export default function SearchView({ fromSlug, toSlug }) {
 
       {noMatchButHasTrains && (
         <div style={{ background: '#1a1a1a', padding: 10, borderRadius: 8, marginBottom: 12, fontSize: 13, color: '#aaa', border: '1px solid #2a2a2a' }}>
-          ℹ️ No direct route between these stations. Showing all departures from {fromStation.name} — you may need to change trains.
+          No direct route between these stations. Showing all departures from {fromStation.name} — you may need to change trains.
         </div>
       )}
 
