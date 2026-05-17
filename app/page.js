@@ -152,6 +152,43 @@ export default function Home() {
           ))}
         </div>
       </details>
+
+      <div style={{
+        textAlign: 'center',
+        marginTop: 40,
+        fontSize: 13,
+        fontStyle: 'italic',
+        letterSpacing: '0.05em',
+        fontFamily: '"SF Pro Display", -apple-system, serif',
+      }}>
+        <span className="signature-shimmer">
+          created by <strong>Maddy Daddy</strong>
+        </span>
+      </div>
+
+      <style>{`
+        .signature-shimmer {
+          background: linear-gradient(
+            100deg,
+            rgba(235, 235, 245, 0.25) 0%,
+            rgba(235, 235, 245, 0.25) 40%,
+            #f5f5f7 50%,
+            rgba(235, 235, 245, 0.25) 60%,
+            rgba(235, 235, 245, 0.25) 100%
+          );
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          color: transparent;
+          animation: signature-shimmer 4s ease-in-out infinite;
+          display: inline-block;
+        }
+        @keyframes signature-shimmer {
+          0% { background-position: 200% center; }
+          100% { background-position: -200% center; }
+        }
+      `}</style>
     </main>
   );
 }
