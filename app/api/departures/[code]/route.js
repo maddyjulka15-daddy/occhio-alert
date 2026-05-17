@@ -48,7 +48,7 @@ async function clearReportsForCancelled(trainNumbers) {
 export async function GET(_req, { params }) {
   const { code } = await params;
   const now = new Date();
-  const windows = [0, 30, 60, 90, 120, 150, 180, 210, 240].map(m => new Date(now.getTime() + m * 60000));
+  const windows = [0, 90, 180].map(m => new Date(now.getTime() + m * 60000));
   const results = await Promise.all(windows.map(d => fetchOne(code, d)));
   const seen = new Set();
   const merged = [];

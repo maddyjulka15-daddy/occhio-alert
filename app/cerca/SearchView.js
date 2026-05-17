@@ -6,7 +6,7 @@ import { STATIONS } from '@/lib/stations';
 import { supabase } from '@/lib/supabase';
 import { alertLevel } from '@/lib/level';
 
-const TOWARD_PAVIA = ['pavia','voghera','mortara','alessandria','genova','sestri','ventimiglia','tortona','arquata','novi ligure','la spezia','albairate','vermezzo'];
+const TOWARD_PAVIA = ['pavia','voghera','mortara','alessandria','genova','sestri','ventimiglia','tortona','arquata','novi ligure','la spezia','albairate','vermezzo','savona','livorno','sanremo','bordighera','imperia','finale ligure','asti'];
 const TOWARD_MILANO = ['milano','centrale','garibaldi','rogoredo','bovisa','greco','lambrate','cadorna','domodossola','luino','varese','como','lecco','sondrio','tirano','bergamo','brescia','verona','venezia','bologna','garbagnate'];
 const TOWARD_MALPENSA = ['malpensa','aeroporto','t1','t2','gallarate','busto','arsizio','rho','saronno','luino','laveno'];
 
