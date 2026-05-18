@@ -145,9 +145,11 @@ export default function BusLineView({ line }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 14, margin: '16px 0 4px' }}>
         <div style={{
           width: 56, height: 56, borderRadius: 14,
-          background: '#1c1c1e',
+          background: line.color || '#1c1c1e',
+          color: '#fff',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 24, fontWeight: 700, letterSpacing: '-0.03em',
+          boxShadow: line.color ? `0 4px 12px ${line.color}55` : 'none',
         }}>
           {line.id}
         </div>
@@ -176,7 +178,7 @@ export default function BusLineView({ line }) {
         Official timetable ↗
       </a>
 
-      <BusMap lineId={line.id} />
+      <BusMap lineId={line.id} color={line.color} />
 
       <div style={{
         padding: 22, background: '#1c1c1e', borderRadius: 16,

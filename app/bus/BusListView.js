@@ -87,7 +87,8 @@ export default function BusListView() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
                 <div style={{
                   width: 44, height: 44, borderRadius: 12,
-                  background: '#2c2c2e',
+                  background: line.color || '#2c2c2e',
+                  color: '#fff',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 18, fontWeight: 700, letterSpacing: '-0.02em',
                   flexShrink: 0,
@@ -135,7 +136,8 @@ export default function BusListView() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
                 <div style={{
                   width: 44, height: 44, borderRadius: 12,
-                  background: '#2c2c2e',
+                  background: line.color || '#2c2c2e',
+                  color: '#fff',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 18, fontWeight: 700, letterSpacing: '-0.02em',
                   flexShrink: 0,

@@ -15,9 +15,9 @@ function makeDotIcon(color) {
   });
 }
 
-function makeArrowIcon(angleDeg) {
+function makeArrowIcon(angleDeg, color) {
   return L.divIcon({
-    html: `<div style="transform: rotate(${angleDeg}deg); color: #ff453a; font-size: 22px; line-height: 1; text-shadow: 0 0 3px rgba(0,0,0,0.8); font-weight: 900;">▲</div>`,
+    html: `<div style="transform: rotate(${angleDeg}deg); color: ${color}; font-size: 22px; line-height: 1; text-shadow: 0 0 4px rgba(0,0,0,0.9); font-weight: 900;">▲</div>`,
     className: '',
     iconSize: [22, 22],
     iconAnchor: [11, 11],
@@ -31,7 +31,7 @@ function bearing([lat1, lon1], [lat2, lon2]) {
   return (rad * 180) / Math.PI;
 }
 
-export default function BusMap({ lineId }) {
+export default function BusMap({ lineId, color = '#ef4444' }) {
   const route = routes[lineId];
 
   const bounds = useMemo(() => {
@@ -86,9 +86,9 @@ export default function BusMap({ lineId }) {
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           maxZoom={19}
         />
-        <Polyline positions={coords} pathOptions={{ color: '#ff453a', weight: 4, opacity: 0.85 }} />
+        <Polyline positions={coords} pathOptions={{ color, weight: 5, opacity: 0.9 }} />
         {arrows.map((a, i) => (
-          <Marker key={i} position={a.pos} icon={makeArrowIcon(a.angle)} interactive={false} />
+          <Marker key={i} position={a.pos} icon={makeArrowIcon(a.angle, color)} interactive={false} />
         ))}
         <Marker position={coords[0]} icon={startIcon} />
         <Marker position={coords[coords.length - 1]} icon={endIcon} />
