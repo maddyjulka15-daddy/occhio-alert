@@ -178,7 +178,7 @@ export default function BusLineView({ line }) {
         Official timetable ↗
       </a>
 
-      <BusMap lineId={line.id} color={line.color} />
+      <BusMap lineId={line.id} color={line.color} direction={direction === 'either' ? null : direction} />
 
       <div style={{
         padding: 22, background: '#1c1c1e', borderRadius: 16,
